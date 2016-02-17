@@ -128,6 +128,9 @@ class AmazonBookLibSolrIndexer(val path: String, val solrUri: String) {
         return text
     }
 
+    /**
+     * creates the server and wipes the index as well
+     */
     private fun createServerAndWipeIndex() {
         server = HttpSolrClient(solrUri)
         server!!.deleteByQuery("*:*")
