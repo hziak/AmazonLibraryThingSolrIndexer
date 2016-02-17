@@ -116,6 +116,9 @@ class AmazonBookLibSolrIndexer(val path: String, val solrUri: String) {
         return null
     }
 
+        /**
+         * extracts the element of the xml doc
+         */
     private fun extractElement(doc: Document, solrDoc: SolrInputDocument, element: String?): String? {
         var text : String? = null
         var nlist = doc.getElementsByTagName(element)
