@@ -20,10 +20,10 @@ class AmazonBookLibSolrIndexer(val path: String, val solrUri: String) {
     var threadPool = Executors.newFixedThreadPool(20)
     var futures = ArrayList<Future<Void>>()
 
+
     fun indexAllFilesFromPath() {
         createServerAndWipeIndex()
         val file = File(path)
-        //var futures = ArrayList<Future<Void>>()
         readFiles(file)
         futures.forEachIndexed { i, future ->
             future.get(1000, TimeUnit.SECONDS)
@@ -94,26 +94,15 @@ class AmazonBookLibSolrIndexer(val path: String, val solrUri: String) {
         extractElement(doc, solrDoc, "browseNode", file)
         extractElement(doc, solrDoc, "similarproduct", file)
         extractElement(doc, solrDoc, "seriesitem", file)
-
-        //        var nlist = doc.getElementsByTagName("series")
-        //        if(nlist.length>0)
-        //            if(nlist.item(0).hasChildNodes() || nlist.item(0).textContent.length>0)
-        //                  System.out.println("SeriesFound: "+file.absoluteFile )
         extractMultiElement(doc, solrDoc, "creator", file)
         extractMultiElement(doc, solrDoc, "editorialreview", file)
-
-
-
-
         server?.add(solrDoc)
-
-
-
-
-
         return null
     }
 
+    /**
+     * Extracts elements that contains multiple subnodes
+     */
     private fun extractMultiElement(doc: Document?, solrDoc: SolrInputDocument, element: String?, file: File): String? {
         var text: String? = null
         try {
@@ -191,7 +180,8 @@ fun main(args: Array<String>) {
         val amazonLibIndexer = AmazonBookLibSolrIndexer(args[0], args[1])
         amazonLibIndexer.indexAllFilesFromPath()
     } else {
-        System.out.println("Not enough parameter: Usage programm <Path> <SolrURL>")
+        System.out.println("Not enough parameter: Usage programm <PathToAmazonLibFiles> <SolrURL>")
+        System.out.println("e.g. /opt/Datasets/amazon-lt-xml-all-no-images-1.1/xml http://localhost:8983/solr/amazonLib")
     }
 
 }
